@@ -1,52 +1,113 @@
-import {elements} from './base';
+import {elements, formatDefault} from './base';
 
-export const formatDefault = function(str) {
-    const isFirstSpace = /^\s+/; //Detects one or multiple spaces at the beginning of a string
-    const isLastSpace = /\s+$/; //Detects one or multiple spaces at the end of a string
-    const isMiddleSpace = /\b\s{2,}\b/g; //Detects two or more spaces in between words
-    const isNotStr = /[^\w|\s]|\d/; //Detects simbols and numbers
-    const repSpace = /\b\s\b/g; //Detects single space between words
+const limitRecipeTitle = (title, limit = 17) => {
+    const newTitle = [];
 
-    if (str) {
+    if (title.length > limit) {
 
-        //Check if there is spaces at the beginning and removes them
-        let i = str.match(isFirstSpace);
+        title.split(' ').reduce((acc, curr) => {
 
-        if(i) {
-            str = str.slice(i[0].length);
-        }
+            if (acc + curr.length <= limit) {
+                newTitle.push(curr);
+            } 
 
-        //Check if there is spaces at the end and removes them
-        i = str.match(isLastSpace);
-        if(i) {
-            str = str.slice(0, str.length - i[0].length);
-        }
+            return acc + curr.length;
 
-        str = str.replace(isMiddleSpace, ' ');
+        }, 0);
 
-        //Returns false if the input have digits, too many spaces or simbols
-        if (!isNotStr.test(str)) {
-            return str.replace(repSpace, '%20');//Return %20 instead of spaces between words
-        } else {
-            console.error('Not valid input. It contains simbols and numbers');
-            return false;
-        }
-
+        return `${newTitle.join(' ')} ...`;
     }
 
-}
+    return title;
+};
+
+const renderRecipe = recipe => {
+
+    const markup = `
+        <li>
+            <a class="results__link" href="#${recipe.recipe_id}" title="${recipe.title}">
+                <figure class="results__fig">
+                    <img src="${recipe.image_url}" alt="${recipe.title} photo">
+                </figure>
+                <div class="results__data">
+                    <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
+                    <p class="results__author">${recipe.publisher}</p>
+                </div>
+            </a>
+        </li>
+    `;
+
+    elements.searchResList.insertAdjacentHTML('beforeend', markup);
+
+};
+
+export const clearInput = () => {
+    elements.searchInput.value = '';
+};
 
 export const getInput = () => {
     
     let data = elements.searchInput.value;
 
-    data = formatDefault(data);
+    if (data) data = formatDefault(data);
 
     if (data) {
         return data;
     } else {
         return false;
     }
+
+};
+
+const createButton = (page, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto="${type === 'prev'? page - 1: page + 1}">
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev'? 'left': 'right'}"></use>
+        </svg>
+        <span>Page ${type === 'prev'? page - 1: page + 1}</span>
+    </button>
+`;
+
+export const clearResults = () => {
+    if (elements.searchResList.firstChild) {
+        elements.searchResList.removeChild(elements.searchResList.firstChild);
+    }
+    if (elements.searchResPages.firstChild) {
+        elements.searchResPages.removeChild(elements.searchResPages.firstChild);
+    }
+};
+
+const renderButtons = (page, numResults = 30, resPerPage) => {
+    const pages = Math.ceil(numResults / resPerPage);
+    let button;
+
+    if (page === 1 && pages > 1) {
+        //Only button to go to next page
+        button = createButton(page, 'next');
+    } else if (page < pages) {
+        // Both buttons
+        button = `
+            ${createButton(page, 'next')}
+            ${createButton(page, 'prev')}
+        `;
+    } else if (page === pages && pages > 1) {
+        //Only button to go to prev page
+        button = createButton(page, 'prev');
+    }
+
+    elements.searchResPages.insertAdjacentHTML('afterbegin', button);
+
+};
+
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+    //Render results of current page
+    const start = (page - 1) * resPerPage;
+    const end = page * resPerPage;
+
+    recipes.slice(start, end).forEach(renderRecipe);
+
+    //Render pagination buttons
+    renderButtons(page, recipes.length, resPerPage);
 
 };
 
