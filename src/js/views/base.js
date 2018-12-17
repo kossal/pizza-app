@@ -5,7 +5,8 @@ export const elemensStr = {
     searchRes: '.results',
     loader: '.loader',
     searchResPages: '.results__pages',
-    searchBtn: '.btn-inline'
+    searchBtn: '.btn-inline',
+    searchRecipe: '.recipe'
 };
 
 export const elements = {
@@ -13,7 +14,8 @@ export const elements = {
     searchInput: document.querySelector(elemensStr.searchInput),
     searchResList: document.querySelector(elemensStr.searchResList),
     searchRes: document.querySelector(elemensStr.searchRes),
-    searchResPages: document.querySelector(elemensStr.searchResPages)
+    searchResPages: document.querySelector(elemensStr.searchResPages),
+    searchRecipe: document.querySelector(elemensStr.searchRecipe)
 };
 
 export const renderLoader = parent => {

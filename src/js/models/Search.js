@@ -6,7 +6,7 @@ export default class Search {
         this.key = key;
         this.proxy = proxy;
         this.query = query;
-        this.call = `${this.proxy}${this.url}?key=${this.key}&q=${this.query}`;
+        this.call = `${this.proxy}${this.url}search?key=${this.key}&q=${this.query}`;
         this.results;
     }
     async getResults() {
@@ -15,7 +15,7 @@ export default class Search {
             this.results = res.data.recipes;
         }
         catch(err) {
-            alert(err);
+            console.error(err);
         }
     }
 }

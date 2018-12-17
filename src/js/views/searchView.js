@@ -25,7 +25,7 @@ const renderRecipe = recipe => {
 
     const markup = `
         <li>
-            <a class="results__link" href="#${recipe.recipe_id}" title="${recipe.title}">
+            <a class="results__link" href="?#${recipe.recipe_id}" title="${recipe.title}">
                 <figure class="results__fig">
                     <img src="${recipe.image_url}" alt="${recipe.title} photo">
                 </figure>
@@ -61,20 +61,16 @@ export const getInput = () => {
 
 const createButton = (page, type) => `
     <button class="btn-inline results__btn--${type}" data-goto="${type === 'prev'? page - 1: page + 1}">
+        <span>Page ${type === 'prev'? page - 1: page + 1}</span>    
         <svg class="search__icon">
             <use href="img/icons.svg#icon-triangle-${type === 'prev'? 'left': 'right'}"></use>
         </svg>
-        <span>Page ${type === 'prev'? page - 1: page + 1}</span>
     </button>
 `;
 
 export const clearResults = () => {
-    if (elements.searchResList.firstChild) {
-        elements.searchResList.removeChild(elements.searchResList.firstChild);
-    }
-    if (elements.searchResPages.firstChild) {
-        elements.searchResPages.removeChild(elements.searchResPages.firstChild);
-    }
+    elements.searchResList.innerHTML = '';
+    elements.searchResPages.innerHTML = '';
 };
 
 const renderButtons = (page, numResults = 30, resPerPage) => {
@@ -97,6 +93,10 @@ const renderButtons = (page, numResults = 30, resPerPage) => {
 
     elements.searchResPages.insertAdjacentHTML('afterbegin', button);
 
+};
+
+export const clearRecipe = () => {
+    elements.searchRecipe.innerHTML = '';
 };
 
 export const renderResults = (recipes, page = 1, resPerPage = 10) => {
