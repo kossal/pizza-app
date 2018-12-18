@@ -13,11 +13,12 @@ export default class Recipe {
         try {
             const res = await axios(this.call);
             this.results = res.data.recipe;
-            this.title = res.data.recipe.title;
-            this.author = res.data.recipe.publisher;
-            this.img = res.data.recipe.image_url;
-            this.recipeUrl = res.data.recipe.source_url; 
-            this.ingredients = res.data.recipe.ingredients;
+
+            this.title = this.results.title;
+            this.author = this.results.publisher;
+            this.img = this.results.image_url;
+            this.recipeUrl = this.results.source_url; 
+            this.ingredients = this.results.ingredients;
         }
         catch(err) {
             console.error(err);
@@ -37,7 +38,7 @@ export default class Recipe {
     parseIngredients() {
 
         const unitsLong = ['tablespoons', 'tablespoon', 'ounce', 'ounces', 'teaspoon', 'teaspoons', 'cups', 'pounds'];
-        const unitShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
+        const unitShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound', 'g', 'kg'];
 
         const newIngredients = this.ingredients.map(curr => {
 
@@ -48,16 +49,62 @@ export default class Recipe {
             });
 
             // Remove parentheses
-            ingredient.replace(/ *\([^\(]*\) */g, ' ');
+            ingredient = ingredient.replace(/\s*\([^\(]*\)\s*/g, ' ');
 
             // Parse ingredientes into count, unit and ingredient
             const arrIng = ingredient.split(' ');
-            const unitIndex = ingredient.findIndex(el2 => unitShort.includes(el2));
+            const unitIndex = arrIng.findIndex(curr2 => unitShort.includes(curr2));
 
-            return ingredient;
+            let objIng;
+            if (unitIndex > -1) {
+                //There is a unit
+                const arrCount = arrIng.slice(0, unitIndex);
+
+                let count;
+                if (arrCount.length === 1) {
+                    count = eval(arrIng[0].replace('-', '+'));
+                } else {
+                    count = eval(arrIng.slice(0, unitIndex).join('+'));
+                } 
+                objIng = {
+                    count,
+                    unit: arrIng[unitIndex],
+                    ingredient: arrIng.slice(unitIndex + 1).join(' ')
+                }
+                
+            } else if (parseInt(arrIng[0], 10)) {
+                //There is a number but no unit
+                objIng = {
+                    count: parseInt(arrIng[0], 10),
+                    unit: '',
+                    ingredient: arrIng.slice(1).join(' ')
+                }
+            } else if (unitIndex === -1) {
+                //Ther is no unit and no number
+                objIng = {
+                    count: 1,
+                    unit: '',
+                    ingredient
+                }
+            }
+
+            return objIng;
 
         });
         this.ingredients = newIngredients;
+    }
+
+    updateServings (type) {
+        // Servings
+        const newServings = type === 'dec' ? this.servings--: this.servings++;
+
+        // Ingredients
+        this.ingredients.forEach(ing => {
+            inc.count *= (newServings / this.servings);
+        });
+
+        this.servings = newServings;
+
     }
 
 }

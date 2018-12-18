@@ -95,10 +95,6 @@ const renderButtons = (page, numResults = 30, resPerPage) => {
 
 };
 
-export const clearRecipe = () => {
-    elements.searchRecipe.innerHTML = '';
-};
-
 export const renderResults = (recipes, page = 1, resPerPage = 10) => {
     //Render results of current page
     const start = (page - 1) * resPerPage;
@@ -111,3 +107,10 @@ export const renderResults = (recipes, page = 1, resPerPage = 10) => {
 
 };
 
+export const highlightSelected = id => {
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(curr => {
+        curr.classList.remove('result__link--active');
+    });
+    document.querySelector(`a[href="#${id}"]`).classList.add('result__link--active');
+};
