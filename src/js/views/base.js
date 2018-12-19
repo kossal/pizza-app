@@ -6,7 +6,8 @@ export const elemensStr = {
     loader: '.loader',
     searchResPages: '.results__pages',
     searchBtn: '.btn-inline',
-    searchRecipe: '.recipe'
+    searchRecipe: '.recipe',
+    shopping: '.shopping__list'
 };
 
 export const elements = {
@@ -15,7 +16,8 @@ export const elements = {
     searchResList: document.querySelector(elemensStr.searchResList),
     searchRes: document.querySelector(elemensStr.searchRes),
     searchResPages: document.querySelector(elemensStr.searchResPages),
-    searchRecipe: document.querySelector(elemensStr.searchRecipe)
+    searchRecipe: document.querySelector(elemensStr.searchRecipe),
+    shopping: document.querySelector(elemensStr.shopping)
 };
 
 export const renderLoader = parent => {

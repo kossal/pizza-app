@@ -437,13 +437,13 @@ body {
     font-weight: 700; }
 
 .shopping {
-  padding: 3rem 4rem;
+  padding: 3rem 3rem;
   display: flex;
   flex-direction: column; }
   .shopping__list {
     list-style: none;
-    max-height: 77rem;
-    overflow: scroll; }
+    max-height: 120rem;
+    overflow: auto; }
   .shopping__item {
     display: flex;
     align-items: flex-start;
@@ -465,7 +465,7 @@ body {
       font-size: 1.2rem;
       text-align: center;
       border: none;
-      width: 3.7rem;
+      width: 4.2rem;
       border-radius: 3px; }
       .shopping__count input:focus {
         outline: none;
