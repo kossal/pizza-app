@@ -8,6 +8,7 @@ export default class Recipe {
         this.queryID = queryID;
         this.call = `${this.proxy}${this.url}get?key=${this.key}&rId=${this.queryID}`;
         this.results;
+        this.servings = 4;
     }
     async getRecipe() {
         try {
@@ -29,10 +30,6 @@ export default class Recipe {
         const numIng = this.ingredients.length;
         const periods = Math.ceil(numIng / 3);
         this.time = periods * 15;
-    }
-
-    calcServings() {
-        this.servings = 4;
     }
 
     parseIngredients() {
@@ -96,11 +93,11 @@ export default class Recipe {
 
     updateServings (type) {
         // Servings
-        const newServings = type === 'dec' ? this.servings--: this.servings++;
+        const newServings = type === 'dec' ? this.servings - 1 : this.servings + 1;
 
         // Ingredients
-        this.ingredients.forEach(ing => {
-            inc.count *= (newServings / this.servings);
+        this.ingredients.forEach((ing, i) => {
+            ing.count *= (newServings / this.servings);
         });
 
         this.servings = newServings;

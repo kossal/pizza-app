@@ -108,9 +108,11 @@ export const renderResults = (recipes, page = 1, resPerPage = 10) => {
 };
 
 export const highlightSelected = id => {
-    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    const resultsArr = document.querySelectorAll('.results__link');
     resultsArr.forEach(curr => {
-        curr.classList.remove('result__link--active');
+        if (curr.classList.contains('results__link--active')) {
+            curr.classList.remove('results__link--active');
+        }
     });
-    document.querySelector(`a[href="#${id}"]`).classList.add('result__link--active');
+    document.querySelector(`a[href="?#${id}"]`).classList.add('results__link--active');
 };

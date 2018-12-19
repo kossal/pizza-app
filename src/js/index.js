@@ -27,7 +27,7 @@ const controlSearch = async () => {
 
         // 2) New search object and add to state
         state.search = new Search(...query);
-        console.log(state.search);
+
         // 3) Prepare UI for results
         searchView.clearResults();
         renderLoader(elements.searchRes);
@@ -35,7 +35,6 @@ const controlSearch = async () => {
         try {
             // 4) Search for recipes
             await state.search.getResults();
-            console.log(state.search);
 
             // 5) Render results on UI
             searchView.renderResults(state.search.results);
@@ -64,7 +63,6 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 const controlRecipe = async e => {
-    e.preventDefault();
 
     // Get ID form url
     const id = window.location.hash.replace('#', '');
@@ -74,13 +72,15 @@ const controlRecipe = async e => {
         
         // Create new Recipe Object
         state.recipe = new Recipe(...query);
-
+        
         // Prepare UI for changes
         recipeView.clearRecipe();
         renderLoader(elements.searchRecipe);
 
         // Highlight selected recipe
-        if (state.seach) searchView.highlightSelected(id);
+        if (state.search) {
+            searchView.highlightSelected(id);
+        }
 
         try {
            // Get recipe data
@@ -88,12 +88,10 @@ const controlRecipe = async e => {
 
             // Calculate servings, time and ingredients
             state.recipe.calcTime();
-            state.recipe.calcServings(); 
             state.recipe.parseIngredients();
 
             // Render recipe
-            recipeView.renderRecipe();
-            
+            recipeView.renderRecipe(state.recipe);
         }
         catch {
             alert('Error processing recipe');
@@ -104,12 +102,14 @@ const controlRecipe = async e => {
     }   
 };
 
-//window.addEventListener('hashchange', controlRecipe);
+window.addEventListener('hashchange', controlRecipe);
 
-['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+//['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 // Handling recipe button clicks
 elements.searchRecipe.addEventListener('click', e => {
+    console.log(e);
+    console.log(`${e.target.matches('.btn-decrease, .btn-decrease *')} ${e.target.matches('.btn-increase, .btn-increase *')}`);
     if (e.target.matches('.btn-decrease, .btn-decrease *')) {
         if (state.recipe.servings > 1) {
             state.recipe.updateServings('dec');

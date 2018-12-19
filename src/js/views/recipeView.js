@@ -38,7 +38,7 @@ export const renderRecipe = recipe => {
 
     const markup = `
         <figure class="recipe__fig">
-            <img src="${recipe.img}" alt="${recipe.title}">
+            <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
             <h1 class="recipe__title">
                 <span>${recipe.title}</span>
             </h1>
@@ -120,10 +120,11 @@ export const updServIngredients = recipe => {
     document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
 
     // Update ingredients
-    const countElements = Array.from(document.querySelectorAll('.recipe__count'))
-    countElements.forEach((curr, i => {
-        curr.textContent = formatCount(recipe.ingredientes[i].count);
-    }));
+    const countElements = document.querySelectorAll('.recipe__count');
+    
+    countElements.forEach((curr, i) => {
+        curr.textContent = formatCount(recipe.ingredients[i].count);
+    });
 
 
 };
