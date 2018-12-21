@@ -1,6 +1,6 @@
 import {elements, formatDefault} from './base';
 
-const limitRecipeTitle = (title, limit = 17) => {
+export const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = [];
 
     if (title.length > limit) {
@@ -114,5 +114,7 @@ export const highlightSelected = id => {
             curr.classList.remove('results__link--active');
         }
     });
-    document.querySelector(`a[href="?#${id}"]`).classList.add('results__link--active');
+    if (document.querySelector(`a[href="?#${id}"]`)) {
+        document.querySelector(`a[href="?#${id}"]`).classList.add('results__link--active');
+    }
 };

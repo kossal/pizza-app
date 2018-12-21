@@ -7,7 +7,9 @@ export const elemensStr = {
     searchResPages: '.results__pages',
     searchBtn: '.btn-inline',
     searchRecipe: '.recipe',
-    shopping: '.shopping__list'
+    shopping: '.shopping__list',
+    likes: '.likes__field',
+    likesList: '.likes__list'
 };
 
 export const elements = {
@@ -17,7 +19,9 @@ export const elements = {
     searchRes: document.querySelector(elemensStr.searchRes),
     searchResPages: document.querySelector(elemensStr.searchResPages),
     searchRecipe: document.querySelector(elemensStr.searchRecipe),
-    shopping: document.querySelector(elemensStr.shopping)
+    shopping: document.querySelector(elemensStr.shopping),
+    likes: document.querySelector(elemensStr.likes),
+    likesList: document.querySelector(elemensStr.likesList),
 };
 
 export const renderLoader = parent => {
